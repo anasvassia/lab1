@@ -44,7 +44,7 @@ exercise2 is a function that returns 42 (instead of failing). When you
 submit, the Exercise 2 unit test should then pass.
 ......................................................................*)
 
-let exercise2 () = failwith "exercise2 not implemented" ;;
+let exercise2 () = 42 ;;
 
 (* From here on, you'll want to test your lab solutions locally before
 submitting them at the end of lab to Gradescope. A simple way to do that
@@ -101,7 +101,7 @@ appropriate OCaml expression to assign the value to the variable
 exercise1 below.
 ......................................................................*)
 
-let exercise3 () = failwith "exercise3 not implemented" ;;
+let exercise3 () = ~-5 + 3 ;;
 
 (* Hint: The OCaml concrete expression
 
@@ -113,8 +113,19 @@ does *not* correspond to the abstract syntax above.
 Exercise 4: Draw the tree that the concrete syntax "~- 5 - 3" does
 correspond to. Check it with a member of the course staff if you'd
 like.
-......................................................................*)
 
+
+      ~-
+      |
+      |
+      +
+      ^
+     / \
+    /   \
+   5     3
+
+
+......................................................................*)
 
 (*......................................................................
 Exercise 5: Associativity plays a role in cases when two operators
@@ -137,6 +148,7 @@ the operator. Use this expression to determine the associativity of
 the operator. Check your answer with a member of the course staff if
 you'd like.
 ......................................................................*)
+1 + 2 + 3 / 4 ;;
 
 (*======================================================================
 Part 2: Types and type inference
@@ -148,25 +160,22 @@ expressions below? Test your solution by uncommenting the examples
 error is generated.
 ......................................................................*)
 
-(*  <--- After you've replaced the ???s, remove this start of comment line
 
-let exercise6a : ??? = 42 ;;
+let exercise6a : int = 42 ;;
 
-let exercise6b : ??? =
+let exercise6b : string =
   let greet y = "Hello " ^ y
   in greet "World!";;
 
-let exercise6c : ??? =
+let exercise6c : float -> float =
   fun x -> x +. 11.1 ;;
 
-let exercise6d : ??? =
+let exercise6d : int -> bool =
   fun x -> x < x + 1 ;;
 
-let exercise6e : ??? =
+let exercise6e : int -> float ->  int =
   fun x -> fun y -> x + int_of_float y ;;
 
-
-and remove this whole end of comment line too. ---->  *)
 
 (*======================================================================
 Part 3: First-order functional programming
@@ -197,9 +206,9 @@ functions in the lab to get some practice with automated unit testing.
 ......................................................................*)
 
 let square (x : int) : int  =
-  failwith "square not implemented" ;;
+  x * x ;;
 
-let exercise7 = 0 ;;
+let exercise7 = square 5 ;;
 
 (*......................................................................
 Exercise 8: Define a function say_hello that, given a name, creates a
@@ -218,7 +227,9 @@ to the function.
 ......................................................................*)
 
 let say_hello (name : string) : string =
-  failwith "say_hello not implemented";;
+  "Hi " ^ name
+    ^ (if name = "Gabby" || name = "gabby" then ". Welcome home!" else ".") 
+    ^ " How are you today?";;
 
 (*......................................................................
 Exercise 9: Define a function, small_bills, that determines, given a
@@ -231,7 +242,7 @@ integers. For this lab, you may assume all prices given are
 non-negative.
 ......................................................................*)
 let small_bills (price : int) : bool =
-  failwith "small_bills not implemented" ;;
+  price mod 20 <> 0 ;;
 
 (*......................................................................
 Exercise 10:
@@ -258,11 +269,26 @@ that:
   - : int = 1
 
 ......................................................................*)
+let common  (y : int) : int =
+  let a = y mod 19 in
+  let b = y / 100 in
+  let c =  y mod 100 in
+  let d = b / 4 in
+  let e =  b mod 4 in
+  let f = (b + 8)/ 25 in 
+  let g = (b - f + 1) / 3 in
+  let h = (19*a + b -d - g + 15) mod 30 in
+  let i = c / 4 in
+  let k = c mod 4 in 
+  let l  = (32 + 2*e + 2*i - h - k) mod 7 in
+  let m = (a + 11*h + 22*l) / 451 in
+  h + l - 7*m + 114 ;;
 
 let computus_month (year : int) : int =
-  failwith "computus_month not implemented" ;;
+  (common year) / 31 ;;
+
 let computus_day (year : int) : int =
-  failwith "computus_day not implemented" ;;
+  (common year) mod 31 + 1 ;;
 
 (*======================================================================
 Part 4: Utilizing recursion
@@ -280,8 +306,11 @@ this exercise, you may assume all inputs will be positive.
 
 ......................................................................*)
 
-let factorial (x : int) : int =
-  failwith "factorial not implementated" ;;
+let rec factorial (x : int) : int =
+  match x with
+  | 0 -> 1
+  | 1 -> x
+  | _ -> x * factorial (x - 1) ;;
 
 (*......................................................................
 Exercise 12: Define a recursive function that sums all the elements
@@ -299,5 +328,8 @@ the mathematician Carl Freiedrich Gauss as a seven-year-old, *in his
 head*!)
 ......................................................................*)
 
-let sum_from_zero (x : int) : int =
-  failwith "sum_from_zero not implemented" ;;
+let rec sum_from_zero (x : int) : int =
+  match x with
+  | 0 -> 0
+  | _ -> if x > 0 then  x + sum_from_zero (x - 1) 
+         else x + sum_from_zero (x + 1) ;;
